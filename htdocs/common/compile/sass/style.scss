@@ -1,0 +1,58 @@
+@charset "utf-8";
+
+//-----import Sass File---------
+
+@import "_sprite";
+
+@import "_mixin";
+
+@import "_variable";
+
+@import "_normalize";
+
+@import "_set";
+
+@import "_layout";
+
+@import "_header";
+
+@import "_footer";
+
+@import "_modules";
+
+.unko {
+	padding: 10px;
+	box-shadow:2px 2px 2px #ffffff;
+	margin-top: 10px;
+	@include below(768px){
+		text-align: left;
+	} 
+}
+
+.unko {
+	padding: 10px;
+	margin-top: 10px;
+	box-shadow:2px 2px 2px #ffffff;
+}
+
+.unko2 {
+	padding: 10px;
+	box-shadow:2px 2px 2px #ffffff;
+	color:2px;
+	margin-top: 10px;
+	@include below(768px){
+		text-align: left;
+	} 
+}
+
+.selector{
+	@include linear-gradient(top, "000000", 0, "dd0000", 50, "333333", 100);
+	@include below(768px){
+		text-align: left;
+	}
+}
+
+.selector {
+  box-shadow: 2px 2px 2px solid;
+  @include fontsize(14);
+}

@@ -1,0 +1,149 @@
+@charset "utf-8";
+
+/* ===========================================================
+
+   [Setting] 
+
+=========================================================== */
+html,body,
+div,span,
+object,iframe,
+h1,h2,h3,h4,h5,h6,
+p,blockquote,pre,
+a,abbr,acronym,address,cite,code,del,dfn,em,img,ins,kbd,q,samp,strong,sub,sup,tt,var,
+ul,ol,li,dl,dt,dd,
+form,fieldset,legend,label,
+table,caption,tbody,tfoot,thead,tr,th,td,
+header,main,nav,footer,section{
+margin:0;
+padding:0;
+}
+
+header,nav,footer,section,main{
+display:block;
+}
+
+h1,h2,h3,h4,h5{
+font-size:100%;
+font-weight:bold;
+}
+
+img{
+border:none;
+vertical-align:bottom;
+}
+
+em,
+strong{
+font-style:normal;
+font-weight:normal;
+text-align:left;
+}
+
+table{
+border:none;
+border-spacing:0;
+font-size:100%;
+}
+
+th,
+td{
+border:none;
+border-spacing:0;
+vertical-align:top;
+}
+
+caption,
+th{
+font-weight:normal;
+text-align:left;
+}
+
+ul,
+ol,
+dl{
+list-style:none;
+}
+
+input,
+select,
+textarea{
+vertical-align:middle;
+}
+
+hr{
+display:none;
+}
+
+
+/* -----------------------------------------------------------
+    02. Basic Style
+----------------------------------------------------------- */
+html{
+font-size: 100%;
+overflow-y:scroll;
+}
+
+body{
+color:#333333;
+@include fontsize(16);
+overflow:hidden;
+}
+
+body,
+input,
+select,
+button,
+textarea{
+font-family:"ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro","メイリオ", "ＭＳ Ｐゴシック", "MS PGothic",  sans-serif;
+}
+
+a:link{
+color:$link-color;
+text-decoration:none;
+}
+
+a:visited{
+color:$link-visited;
+text-decoration:none;
+}
+
+a:hover,
+a:active,
+a:focus{
+color:$link-hover;
+text-decoration:underline;
+}
+
+p, ul li, ol li, dl dt, dl dd,
+caption, th, td,
+input, option, textarea{
+line-height:1.5;
+}
+
+p, ul, ol, dl, table{
+margin-bottom:10px;
+}
+
+li p,
+li ul,
+li ol{
+margin-bottom:0;
+}
+
+strong{
+font-weight:bold;
+}
+
+em{
+font-weight:bold;
+}
+
+small{
+font-size:0.83em;
+}
+
+input[type="checkbox"]:checked + * {
+	opacity:0.7;
+	background-color:#ffffff;
+}

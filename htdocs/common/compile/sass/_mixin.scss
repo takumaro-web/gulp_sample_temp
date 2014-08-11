@@ -1,0 +1,375 @@
+@charset "utf-8";
+
+// ========================================================================================
+//　Support Browser
+// ========================================================================================
+$support-ie8: false;
+$support-ie9: true;
+
+// ========================================================================================
+// mixin
+// ========================================================================================
+
+// rem font set
+// example: @include fontsize(16)
+//-------------------------------------------------------------------------------------------------------
+@mixin fontsize($size: 24, $base: 16) {
+  @if $support-ie8 == true {
+    font-size: $size + px;
+  }
+  font-size: ($size / $base) * 1rem;
+}
+
+// clearfix
+// example: @include clearfix
+//-------------------------------------------------------------------------------------------------------
+@mixin clearfix {
+  &:before,
+  &:after {
+    content: " ";
+    display: table;
+  }
+
+  &:after {
+    clear: both;
+  }
+}
+
+// グラデーション指定
+//-------------------------------------------------------------------------------------------------------
+//引数は、<方向>,<色1>,<位置1>,<色2>,<位置2>,<色3>,<位置3>...
+//色には＃は付けない。また、16進数のみ
+//offset にはパーセンテージで渡す。単位は付けない
+//@include linear-gradient(top, "BCE13D", 0, "F7FEE7", 50, "000000", 100);
+//-------------------------------------------------------------------------------------------------------
+@mixin linear-gradient($angle, $color1, $offset1, $color2 ,$offset2:100, $color3:null, $offset3:100, $color4:null, $offset4:100, $color5:null, $offset5:100){
+    $angle_webkit:'left top, left bottom';
+    $angle_svg:'%20x2%3d%220%25%22%20y2%3d%22100%25%22';
+    $color-stop1_svg:'%3cstop%20style%3d%22stop%2dcolor%3a%23'#{$color1}'%22%20offset%3d%22'#{$offset1}'%25%22%2f%3e';
+    $color-stop2_svg:'%3cstop%20style%3d%22stop%2dcolor%3a%23'#{$color2}'%22%20offset%3d%22'#{$offset2}'%25%22%2f%3e';
+    $color-stop3_svg:'';
+    $color-stop4_svg:'';
+    $color-stop5_svg:'';
+    @if $angle == right{
+        $angle_svg:'%20x2%3d%22100%25%22';
+    }
+    @if $angle == bottom{
+        $angle_svg:'%20x2%3d%220%22%20y1%3d%22100%25%22';
+    }
+    @if $angle == left{
+        $angle_svg:'';
+    }
+    @if $color3 != null {
+        $color-stop3_svg:'%3cstop%20style%3d%22stop%2dcolor%3a%23'#{$color3}'%22%20offset%3d%22'#{$offset3}'%25%22%2f%3e';
+    }
+    @if $color4 != null {
+        $color-stop4_svg:'%3cstop%20style%3d%22stop%2dcolor%3a%23'#{$color4}'%22%20offset%3d%22'#{$offset4}'%25%22%2f%3e';
+    }
+    @if $color5 != null {
+        $color-stop5_svg:'%3cstop%20style%3d%22stop%2dcolor%3a%23'#{$color5}'%22%20offset%3d%22'#{$offset5}'%25%22%2f%3e';
+    } 
+    background-image:url(data:image/svg+xml,%3c%3fxml%20version%3d%221%2e0%22%3f%3e%3csvg%20xmlns%3d%22http%3a%2f%2fwww%2ew3%2eorg%2f2000%2fsvg%22%20width%3d%22100%25%22%20height%3d%22100%25%22%3e%3cdefs%3e%3clinearGradient%20id%3d%22G%22#{$angle_svg}%3e#{$color-stop1_svg}#{$color-stop2_svg}#{$color-stop3_svg}#{$color-stop4_svg}#{$color-stop5_svg}%3c%2flinearGradient%3e%3c%2fdefs%3e%3crect%20width%3d%22100%25%22%20height%3d%22100%25%22%20fill%3d%22url%28%23G%29%22%2f%3e%3c%2fsvg%3e);
+}
+
+// メディアクエリー（ブレークポイント別管理）
+//-------------------------------------------------------------------------------------------------------
+//        below は引数のブレークポイント以下、above は引数のブレークポイントより上のサイズへの
+//        メディアクエリー別スタイルが記述される
+//        引数には原則、_vars.scss で定義したブレークポイント用変数を指定する
+//
+//        【使いかた】
+//        div {
+//                @include below($breakMedium) {
+//                        margin-bottom: 0;
+//                }
+//                @include inbetween($breakSmall, $breakMedium) {
+//                        margin-bottom: 40px;
+//                }
+//        }
+//-------------------------------------------------------------------------------------------------------
+@mixin below($breakpoint) {
+        @media screen and (max-width: $breakpoint) {
+                @content;
+        }
+}
+@mixin above($breakpoint) {
+        @media screen and (min-width: $breakpoint + 1) {
+                @content;
+        }
+}
+@mixin inbetween($breakpointSmall, $breakpointLarge) {
+        @media screen and (min-width: $breakpointSmall + 1) and (max-width: $breakpointLarge) {
+                @content;
+        }
+}
+
+// アイコン生成
+//-------------------------------------------------------------------------------------------------------
+//        $pos:     ビュレット表示位置（left, right）
+//        $space:   親要素外辺からのビュレット位置（px）
+//        $includeName: 生成されたスプライトクラスを記述してアイコンを指定
+//-------------------------------------------------------------------------------------------------------
+@mixin addIcon ($pos, $space, $includeName) {
+        position: relative;
+        &:before {
+                content: "";
+                position: absolute;
+                top: 0;
+                #{$pos}: $space;
+                z-index: 1;
+                display: block;
+                overflow: hidden;
+                @extend #{"."+$includeName};
+        }
+}
+
+// ビュレット生成
+//-------------------------------------------------------------------------------------------------------
+//        $top:     親要素上外辺からのビュレット位置（px）
+//        $left:    親要素左外辺からのビュレット位置（px）
+//        $includeName: 生成されたスプライトクラスを記述してアイコンを指定
+//-------------------------------------------------------------------------------------------------------
+@mixin addBullet ($top, $left, $includeName) {
+        position: relative;
+        &:before {
+                content: "";
+                position: absolute;
+                top: $top;
+                left: $left;
+                display: block;
+                overflow: hidden;
+                @extend #{"."+$includeName};
+        }
+}
+
+// 汎用矢印生成
+//-------------------------------------------------------------------------------------------------------
+//        $space:    親要素外辺からのビュレット位置（px）
+//        $bdrWidth: 矢印の線幅（px）
+//        $bdrColor: 矢印の前景色（hex）
+//-------------------------------------------------------------------------------------------------------
+@mixin addArrow($space, $bdrWidth, $bdrColor) {
+        position: relative;
+        &:after {
+                content: "";
+                position: absolute;
+                top: 50%;
+                right: $space + $bdrWidth;
+                display: block;
+                margin-top: -($bdrWidth + $bdrWidth / 2);
+                border-right: $bdrWidth solid $bdrColor;
+                border-bottom: $bdrWidth solid $bdrColor;
+                width: $bdrWidth * 2;
+                height: $bdrWidth * 2;
+                @include rotate(-45deg);
+        }
+}
+
+// 汎用三角形生成
+//https://github.com/thoughtbot/bourbon/blob/master/app/assets/stylesheets/addons/_triangle.scss
+//-------------------------------------------------------------------------------------------------------
+//        $size: 三角形の大きさ
+//        $color: 三角形の色
+//        $direction: 三角形の向き
+//-------------------------------------------------------------------------------------------------------
+@mixin triangle ($size, $color, $direction) {
+        height: 0;
+        width: 0;
+
+        @if ($direction == up) or ($direction == down) or ($direction == right) or ($direction == left) {
+                border-color: transparent;
+                border-style: solid;
+                border-width: $size / 2;
+
+                @if $direction == up {
+                        border-bottom-color: $color;
+
+                } @else if $direction == right {
+                        border-left-color:   $color;
+
+                } @else if $direction == down {
+                        border-top-color:    $color;
+
+                } @else if $direction == left {
+                        border-right-color:  $color;
+                }
+        }
+
+        @else if ($direction == up-right) or ($direction == up-left) {
+                border-top: $size solid $color;
+
+                @if $direction == up-right {
+                        border-left:  $size solid transparent;
+
+                } @else if $direction == up-left {
+                        border-right: $size solid transparent;
+                }
+        }
+
+        @else if ($direction == down-right) or ($direction == down-left) {
+                border-bottom: $size solid $color;
+
+                @if $direction == down-right {
+                        border-left:  $size solid transparent;
+
+                } @else if $direction == down-left {
+                        border-right: $size solid transparent;
+                }
+        }
+}
+
+// RGBa フォールバック
+//-------------------------------------------------------------------------------------------------------
+//        $type:  前景色か背景色か（'color'/'bg'）
+//        $color: 16 進数で色を指定
+//        $per:   アルファ値（.1〜1）
+//
+//        使用例：
+//        div.foo {
+//                @include trans('bg', #c00, .5);
+//        }
+//-------------------------------------------------------------------------------------------------------
+@function trans($color, $per) {
+        @if $per == .1 { @return lighten($color, 45%); }
+        @if $per == .2 { @return lighten($color, 40%); }
+        @if $per == .3 { @return lighten($color, 35%); }
+        @if $per == .4 { @return lighten($color, 30%); }
+        @if $per == .5 { @return lighten($color, 25%); }
+        @if $per == .6 { @return lighten($color, 20%); }
+        @if $per == .7 { @return lighten($color, 15%); }
+        @if $per == .8 { @return lighten($color, 10%); }
+        @if $per == .9 { @return lighten($color, 5%); }
+        @if $per == 1 { @return $color; }
+}
+@mixin trans($type, $color, $per) {
+        @if $type == 'color' {
+                color: trans($color, $per);
+                color: rgba($color, $per)
+        }
+        @if $type == 'bg' {
+                background-color: trans($color, $per);
+                background-color: rgba($color, $per);
+        }
+}
+
+// RetinaImage
+//-------------------------------------------------------------------------------------------------------
+//        $file-1:  通常画像パス
+//        $file-2:  Retina画像パス
+//        $width: 通常画像の幅
+//        $height: 通常画像の高さ
+//
+//        【使いかた】
+//        div.logo {
+//                @include image-retina("logo.png", "logo2x.png", 100px, 25px);
+//        }
+//-------------------------------------------------------------------------------------------------------
+@mixin img-retina($file-1x, $file-2x, $width-1x, $height-1x) {
+        background-image: url(#{$file-1x});
+
+        @media
+        only screen and (-webkit-min-device-pixel-ratio: 2),
+        only screen and (min--moz-device-pixel-ratio: 2),
+        only screen and (-o-min-device-pixel-ratio: 2/1),
+        only screen and (min-device-pixel-ratio: 2),
+        only screen and (min-resolution: 192dpi),
+        only screen and (min-resolution: 2dppx) {
+                background-image: url(#{file-2x});
+                background-size: $width-1x $height-1x;
+        }
+}
+
+// 配置mixin
+//さっさと配置
+//-------------------------------------------------------------------------------------------------------
+//        【使いかた】
+//        .column-layout-3 {
+//                @include abs-pos(absolute, 20px, auto, auto, 20px);
+//        }
+//-------------------------------------------------------------------------------------------------------
+@mixin abs-pos ($position, $top: auto, $right: auto, $bottom: auto, $left: auto) {
+        top: $top;
+        right: $right;
+        bottom: $bottom;
+        left: $left;
+        position: $position;
+}
+
+// box-emboss効果
+//凹んだ立体感を出すエフェクト。引数は（上部の黒線の透明度, 上部の黒線の大きさ,下部の白線の透明度, 下部の白線の大きさ）
+//-------------------------------------------------------------------------------------------------------
+//        【使いかた】
+//        .box{
+//                @include box-emboss(0.8, 1px, 0.05, 1px);
+//        }
+//-------------------------------------------------------------------------------------------------------
+@mixin box-emboss($opacity, $large, $opacity2, $large2){
+        box-shadow:white($opacity) 0 $large 0, inset black($opacity2) 0 $large2 0;
+}
+
+// letterpress効果
+//紙にプレスしたような薄い白い影をテキストにつけるエフェクト。引数は（透明度, 大きさ）
+//-------------------------------------------------------------------------------------------------------
+//        【使いかた】
+//        .box{
+//                @include letterpress(0.8, 1px);
+//        }
+//-------------------------------------------------------------------------------------------------------
+@mixin letterpress($opacity, $large){
+        text-shadow:white($opacity) 0 $large 0;
+}
+
+// textをすっ飛ばして背景画像を使うアレ
+//-------------------------------------------------------------------------------------------------------
+//        【使いかた】
+//        .logo{
+//                background: url("logo.png");
+//                height:100px;
+//                width:200px;
+//                @include hide-text;
+//        }
+//-------------------------------------------------------------------------------------------------------
+@mixin hide-text{
+        overflow:hidden;
+        text-indent:-9999px;
+        display:block;
+}
+
+// IE7対応inline-block用mixin
+//-------------------------------------------------------------------------------------------------------
+@mixin  inline_block {
+        display: inline-block;
+        @if ($supportIe7 == true) {
+                *display: inline;
+                *zoom: 1;
+        }
+}
+
+// 頻出スタイルmixin
+//-------------------------------------------------------------------------------------------------------
+
+// 中央揃え
+@mixin center-block {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+}
+
+// 縦中央揃え
+@mixin vertical-middle{
+        display: inline-block;
+        vertical-align: middle;
+}
+
+// サイズ指定
+@mixin size($width, $height) {
+        width: $width;
+        height: $height;
+}
+
+// レスポンシブ画像
+@mixin img-responsive($display: block) {
+        display: $display;
+        max-width: 100%;
+        height: auto;
+}
