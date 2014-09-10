@@ -43,7 +43,7 @@ gulp.task('sass', function () {
 　Coffee Bulid
 ---------------------------------------------------------------------------------- */
 gulp.task('coffee', function(){
-    gulp.src(config.path.sass+'/*.coffee') //coffeescriptがある場所
+    gulp.src(config.path.coffee+'/*.coffee') //coffeescriptがある場所
         .pipe(coffee())
         .pipe(gulp.dest(config.path.js));// htdocs/common/js/フォルダ内に吐き出す。        
 });
@@ -159,8 +159,8 @@ gulp.task('compress', function() {
 ---------------------------------------------------------------------------------- */
 gulp.task('watch', function() {
 	gulp.watch(config.path.sass+'**/*.scss', ['sass']);
-	gulp.watch(config.path.sass+'/*.coffee', ['coffee']);
-    gulp.watch(config.path.css+'/style.css', ['ple']);
+	gulp.watch(config.path.coffee+'/*.coffee', ['coffee']);
+  gulp.watch(config.path.css+'/style.css', ['ple']);
 });
 
 /* ----------------------------------------------------------------------------------
