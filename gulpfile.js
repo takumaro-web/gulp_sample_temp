@@ -19,7 +19,7 @@ var root = "htdocs",
       "sass"      : root+"/common/compile/sass",
       "css"       : root+"/common/css",
       "coffee"    : root+"/common/compile/coffee",
-      "js"        : root+"htdocs/common/js/"
+      "js"        : root+"/common/js/"
    }
 }
 
