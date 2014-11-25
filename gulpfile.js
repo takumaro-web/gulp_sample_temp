@@ -3,7 +3,6 @@ var sass = require('gulp-ruby-sass');
 var coffee = require('gulp-coffee');
 var spritesmith = require('gulp.spritesmith');
 var pleeease = require('gulp-pleeease');
-var plumber = require('gulp-plumber');
 var imagemin = require('gulp-imagemin');
 var webserver = require('gulp-webserver');
 var uglify = require('gulp-uglify');
