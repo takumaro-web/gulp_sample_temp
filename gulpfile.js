@@ -20,7 +20,7 @@ var root = "htdocs",
       "coffee"    : root+"/common/compile/coffee",
       "js"        : root+"/common/js/"
    }
-}
+};
 
 /* ----------------------------------------------------------------------------------
 　Sass
